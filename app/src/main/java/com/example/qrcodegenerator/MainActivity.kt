@@ -15,5 +15,28 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
+        val editText = findViewById<EditText>(R.id.edit_text)
+        val button = findViewById<Button>(R.id.btn_generate)
+        val imageView = findViewById<ImageView>(R.id.QR_Code)
+
+        button.setOnClickListener {
+            val multiFormatWriter = MultiFormatWriter()
+
+            try {
+                val bitMatrix = multiFormatWriter.encode(
+                    editText.text.toString(),
+                    BarcodeFormat.QR_CODE,
+                    300,
+                    300
+                )
+
+                val barcodeEncoder = BarcodeEncoder()
+                val bitmap = barcodeEncoder.createBitmap(bitMatrix)
+
+                imageView.setImageBitmap(bitmap)
+            } catch (e: WriterException) {
+                throw RuntimeException(e)
+            }
+        }
     }
 }
